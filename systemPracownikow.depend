@@ -1,0 +1,63 @@
+# depslib dependency file v1.0
+1789322892 source:c:\users\shera\desktop\c++ programy\codeblocks\mingw\systempracownikow\main.cpp
+	<iostream>
+	"pracownik.h"
+	"pracownicy.h"
+	"menu.h"
+
+1789473073 source:c:\users\shera\desktop\c++ programy\codeblocks\mingw\systempracownikow\pracownik.cpp
+	<iostream>
+	"pracownik.h"
+
+1789473073 c:\users\shera\desktop\c++ programy\codeblocks\mingw\systempracownikow\pracownik.h
+	<iostream>
+	"typPracownika.h"
+	<stdexcept>
+
+1789903529 c:\users\shera\desktop\c++ programy\codeblocks\mingw\systempracownikow\pracownicy.h
+	<iostream>
+	<memory>
+	<vector>
+	<algorithm>
+	"pracownik.h"
+	"typPracownika.h"
+	<numeric>
+	<string>
+	"typPracownika.h"
+	<fstream>
+
+1789904170 source:c:\users\shera\desktop\c++ programy\codeblocks\mingw\systempracownikow\pracownicy.cpp
+	<iostream>
+	"pracownicy.h"
+	<fstream>
+	<sstream>
+	<utility>
+
+1789389659 c:\users\shera\desktop\c++ programy\codeblocks\mingw\systempracownikow\typpracownika.h
+	<iostream>
+
+1789389672 source:c:\users\shera\desktop\c++ programy\codeblocks\mingw\systempracownikow\typpracownika.cpp
+	<iostream>
+	"typPracownika.h"
+
+1789904562 source:c:\users\shera\desktop\c++ programy\codeblocks\mingw\systempracownikow\menu.cpp
+	<iostream>
+	"menu.h"
+	<sstream>
+
+1789902611 c:\users\shera\desktop\c++ programy\codeblocks\mingw\systempracownikow\menu.h
+	<iostream>
+	"pracownik.h"
+	"pracownicy.h"
+	"input.h"
+	"typPracownika.h"
+
+1789642926 c:\users\shera\desktop\c++ programy\codeblocks\mingw\systempracownikow\input.h
+	<iostream>
+	"menu.h"
+	<conio.h>
+
+1789643326 source:c:\users\shera\desktop\c++ programy\codeblocks\mingw\systempracownikow\input.cpp
+	<iostream>
+	"input.h"
+

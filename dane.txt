@@ -1,0 +1,14 @@
+8
+77|Kamil|Programista|8000|30|
+3|Emauel|Programista|5000|30|
+2|Horacy|Ksiegowy|6000|35|
+6|Horacy|Manager|15000|40|
+7|Kuba|Programista|15000|40|
+1|Jan|Programista|5000|160|
+2|Anna|Ksiegowy|6000|150|
+1|Jan|Programista|5000|160|
+2|Anna|Ksiegowy|6000|150|
+abc|Piotr|Manager|7000|160|
+4|Marek|Nieistniejacy|5000|160|
+5|Kasia|Programista|5000|0|
+123abc|Adam|Manager|6000|160|

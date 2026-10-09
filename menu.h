@@ -20,7 +20,6 @@ enum class MainMenuOption
     ShowWorkersBy,
     ChangeAllWorkers,
     ChangeAllSpecificWorkers,
-    ChangeWorkerId,
     ShowWhat,
     ShowInvalidRecords,
     Exit
@@ -50,7 +49,6 @@ enum class ChangeWorkerWhat
     Name=1,
     Hours,
     Salary,
-    Id,
     Type,
     Exit
 };
@@ -94,11 +92,10 @@ class Menu
     void sortWorkersByMenu();
     void changeWorkerDetailMenu();
     void countWorkersByMenu();
-    void findBestByMenu();
+    void findBestMenu();
     void showWorkersByMenu();
     void changeAllWorkersDetailMenu();
-    void changeAllSpecificWorkersMenu();
-    void changeWorkerIdMenu();
+    void changeAllSpecificWorkersSalaryMenu();
     void showWhatMenu();
     void showInvalidRecordsMenu();
     void exit();

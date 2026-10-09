@@ -12,10 +12,6 @@ int Pracownik::getId() const
 {
     return id;
 }
-void Pracownik::setId(int i)
-{
-    id=i;
-}
 std::string Pracownik::getName() const
 {
     return name;

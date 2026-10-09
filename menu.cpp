@@ -31,15 +31,14 @@ void Menu::mainMenu()
         cout<<"5. Sort workers by: "<<endl;
         cout<<"6. Change worker details: "<<endl;
         cout<<"7. Count workers by: "<<endl;
-        cout<<"8. Find best by: "<<endl;
+        cout<<"8. Find best : "<<endl;
         cout<<"9. Show workers by: "<<endl;
         cout<<"10. Change all workers: "<<endl;
-        cout<<"11. Change all specific workers."<<endl;
-        cout<<"12. Change worker id."<<endl;
-        cout<<"13. Show what. "<<endl;
-        cout<<"14. Show invald records. "<<endl;
-        cout<<"15. Exit."<<endl;
-        choice=static_cast<MainMenuOption>(getInt("Choose one of option: ", 1, 15));
+        cout<<"11. Change all specific workers salary."<<endl;
+        cout<<"12. Show what. "<<endl;
+        cout<<"13. Show invald records. "<<endl;
+        cout<<"14. Exit."<<endl;
+        choice=static_cast<MainMenuOption>(getInt("Choose one of option: ", 1, 14));
         switch(choice)
         {
         case MainMenuOption::ShowAllWorkers:
@@ -87,7 +86,7 @@ void Menu::mainMenu()
         }
         case MainMenuOption::FindBestBy:
         {
-            findBestByMenu();
+            findBestMenu();
             pause();
             break;
         }
@@ -105,13 +104,7 @@ void Menu::mainMenu()
         }
         case MainMenuOption::ChangeAllSpecificWorkers:
         {
-            changeAllSpecificWorkersMenu();
-            pause();
-            break;
-        }
-        case MainMenuOption::ChangeWorkerId:
-        {
-            changeWorkerIdMenu();
+            changeAllSpecificWorkersSalaryMenu();
             pause();
             break;
         }
@@ -122,11 +115,11 @@ void Menu::mainMenu()
             break;
         }
         case MainMenuOption::ShowInvalidRecords:
-            {
-                showInvalidRecordsMenu();
-                pause();
-                break;
-            }
+        {
+            showInvalidRecordsMenu();
+            pause();
+            break;
+        }
         case MainMenuOption::Exit:
         {
             exit();
@@ -136,6 +129,8 @@ void Menu::mainMenu()
     }
 
 }
+
+
 
 void Menu::addWorkerMenu()
 {
@@ -168,7 +163,6 @@ void Menu::removeWorkerByMenu(Pracownik* worker)
 Pracownik* Menu::whichWorkerMenu()
 {
     FindWorkerBy choice = FindWorkerBy::Exit;
-    Pracownik* worker=nullptr;
     cout<<"1. By name."<<endl;
     cout<<"2. By id."<<endl;
     cout<<"3. By salary."<<endl;
@@ -199,9 +193,9 @@ Pracownik* Menu::whichWorkerMenu()
         return workers.findWorkerByType(stringNaTyp(getWord("Enter worker type: ")));
     }
     case FindWorkerBy::Exit:
-    {
-        return nullptr;
-    }
+        {
+            return nullptr;
+        }
     default:
         return nullptr;
     }
@@ -210,14 +204,17 @@ Pracownik* Menu::whichWorkerMenu()
 void Menu::sortWorkersByMenu()
 {
     vector<const Pracownik*> result;
-    SortWorkersBy choice = SortWorkersBy::Exit;
     cout<<"1. Sort by name."<<endl;
     cout<<"2. Sort by id."<<endl;
     cout<<"3. Sort by salary."<<endl;
     cout<<"4. Sort by hours."<<endl;
     cout<<"5. Sort by type."<<endl;
     cout<<"6. Exit."<<endl;
-    choice = static_cast<SortWorkersBy>(getInt("Choose: ", 1, 6));
+    SortWorkersBy choice = static_cast<SortWorkersBy>(getInt("Choose: ", 1, 6));
+    if(choice==SortWorkersBy::Exit)
+    {
+        return;
+    }
     switch(choice)
     {
     case SortWorkersBy::Name:
@@ -246,9 +243,9 @@ void Menu::sortWorkersByMenu()
         break;
     }
     case SortWorkersBy::Exit:
-    {
-        return;
-    }
+        {
+            return;
+        }
     }
     if(!result.empty())
     {
@@ -267,49 +264,47 @@ void Menu::sortWorkersByMenu()
 
 void Menu::changeWorkerDetailMenu()
 {
+    cout<<"What would you like to change: "<<endl;
+    cout<<"1. Change name."<<endl;
+    cout<<"2. Change hours."<<endl;
+    cout<<"3. Change salary."<<endl;
+    cout<<"4. Change type."<<endl;
+    cout<<"5. Exit."<<endl;
+    ChangeWorkerWhat choice = static_cast<ChangeWorkerWhat>(getInt("Choose: ",1,5));
+    if(choice == ChangeWorkerWhat::Exit)
+    {
+        return;
+    }
     cout<<"Find worker by: "<<endl;
     Pracownik* worker = whichWorkerMenu();
-    ChangeWorkerWhat choice = ChangeWorkerWhat::Exit;
     if(worker!=nullptr)
     {
-        cout<<"1.Change name."<<endl;
-        cout<<"2. Change hours."<<endl;
-        cout<<"3. Change salary."<<endl;
-        cout<<"4. Change id."<<endl;
-        cout<<"5. Change type."<<endl;
-        cout<<"6. Exit."<<endl;
-        choice = static_cast<ChangeWorkerWhat>(getInt("Choose: ",1,6));
         switch(choice)
         {
         case ChangeWorkerWhat::Name:
         {
-            worker->setName(getWord("Enter name: "));
+            worker->setName(getWord("Enter new name: "));
             break;
         }
         case ChangeWorkerWhat::Hours:
         {
-            worker->setHours(getInt("Enter numeber of hours: ",1,120));
+            worker->setHours(getInt("Enter new numeber of hours: ",1,120));
             break;
         }
         case ChangeWorkerWhat::Salary:
         {
-            worker->setSalary(getDouble("Enter amount: ",1000,30000));
-            break;
-        }
-        case ChangeWorkerWhat::Id:
-        {
-            worker->setId(getInt("Enter new id: ",1, 10000));
+            worker->setSalary(getDouble("Enter new amount: ",1000,30000));
             break;
         }
         case ChangeWorkerWhat::Type:
         {
-            worker->setType(stringNaTyp(getWord("Enter type: ")));
+            worker->setType(stringNaTyp(getWord("Enter new type: ")));
             break;
         }
         case ChangeWorkerWhat::Exit:
-        {
-            return;
-        }
+            {
+                return;
+            }
         }
     }
     else
@@ -321,14 +316,13 @@ void Menu::changeWorkerDetailMenu()
 
 void Menu::countWorkersByMenu()
 {
-    CountWorkersBy choice = CountWorkersBy::Exit;
     int amount = 0;
     cout<<"1. By type."<<endl;
     cout<<"2. By name."<<endl;
     cout<<"3. By salary."<<endl;
     cout<<"4. By hours."<<endl;
     cout<<"5. Exit."<<endl;
-    choice = static_cast<CountWorkersBy>(getInt("Choose: ",1,5));
+    CountWorkersBy choice = static_cast<CountWorkersBy>(getInt("Choose: ",1,5));
     switch(choice)
     {
     case CountWorkersBy::Type:
@@ -357,17 +351,15 @@ void Menu::countWorkersByMenu()
     }
     }
     cout<<"There is: "<<amount<<" amount of that workers."<<endl;
-    getch();
 }
 
-void Menu::findBestByMenu()
+void Menu::findBestMenu()
 {
     const Pracownik* worker = nullptr;
-    int choice= 0;
     cout<<"1. Find best paid worker."<<endl;
     cout<<"2. Find worker with longest hours."<<endl;
     cout<<"3. Exit."<<endl;
-    choice = getInt("Choose: ",1,3);
+    int choice = getInt("Choose: ",1,3);
     switch(choice)
     {
     case 1:
@@ -398,14 +390,13 @@ void Menu::findBestByMenu()
 void Menu::showWorkersByMenu()
 {
     vector<const Pracownik*> result;
-    ShowWorkersBy choice = ShowWorkersBy::Exit;
     cout<<"1. Get workers above salary."<<endl;
     cout<<"2. Get workers above hours."<<endl;
     cout<<"3. Get workers with specific type."<<endl;
     cout<<"4. Get workers with name. "<<endl;
     cout<<"5. With salary beetwen."<<endl;
     cout<<"6. Exit."<<endl;;
-    choice= static_cast<ShowWorkersBy>(getInt("Choose: ",1,6));
+    ShowWorkersBy choice = static_cast<ShowWorkersBy>(getInt("Choose: ",1,6));
     switch(choice)
     {
     case ShowWorkersBy::AboveSalary:
@@ -452,11 +443,10 @@ void Menu::showWorkersByMenu()
 }
 void Menu::changeAllWorkersDetailMenu()
 {
-    int choice = 0;
     cout<<"1. Change all workers salary."<<endl;
     cout<<"2. Change all workers hours."<<endl;
     cout<<"3. Exit."<<endl;
-    choice=getInt("Choose:", 1,3);
+    int choice=getInt("Choose:", 1,3);
     switch(choice)
     {
     case 1:
@@ -476,10 +466,11 @@ void Menu::changeAllWorkersDetailMenu()
     }
 }
 
-void Menu::changeAllSpecificWorkersMenu()
+void Menu::changeAllSpecificWorkersSalaryMenu()
 {
-    bool done = false;
-    done = workers.changeSpecificWorkersSalary(stringNaTyp(getWord("Enter type: ")), getDouble("Enter Amount: ", 1000, 40000));
+    TypPracownika type = stringNaTyp(getWord("Enter type of workers: "));
+    double amount = getDouble("Enter Amount: ", 1000, 40000);
+    bool done = workers.changeSpecificWorkersSalary(type, amount);
     if(!done)
     {
         cerr<<"There is no workers to change."<<endl;
@@ -487,42 +478,19 @@ void Menu::changeAllSpecificWorkersMenu()
     else cout<<"The operation was successfull."<<endl;
 }
 
-void Menu::changeWorkerIdMenu()
-{
-    cout<<"How would you like to choose worker: "<<endl;
-    Pracownik* worker = whichWorkerMenu();
-    if(worker!=nullptr)
-    {
-        worker->showWorkerDetails();
-        while(true)
-        {
-            int id=0;
-            id=getInt("Type new id for this worker: ",1,10000);
-            if(id==worker->getId())
-            {
-                cout<<"This is same id as worker has."<<endl;
-            }
-            else if (workers.changeWorkerId(worker,id))
-            {
-                cout<<"Id changed."<<endl;
-                break;
-            }
-            else cout<<"This id already exist."<<endl;
-        }
-    }
-    else if(worker==nullptr) cout<<"There is no such worker."<<endl;
-
-}
 
 void Menu::showWhatMenu()
 {
     double amount=0.0;
-    ShowWhat choice = ShowWhat::Exit;
     cout<<"1. Average salary of all workers."<<endl;
     cout<<"2. Whole salary of all."<<endl;
     cout<<"3. Highest earning per hour."<<endl;
     cout<<"4. Exit."<<endl;
-    choice=static_cast<ShowWhat>(getInt("Choose: ",1,4));
+    ShowWhat choice =static_cast<ShowWhat>(getInt("Choose: ",1,4));
+    if(choice == ShowWhat::Exit)
+    {
+        return;
+    }
     switch(choice)
     {
     case ShowWhat::AverageSalary:
@@ -540,6 +508,10 @@ void Menu::showWhatMenu()
         amount=workers.getHighestEarningsPerHour();
         break;
     }
+    case ShowWhat::Exit:
+        {
+            return;
+        }
     }
     cout<<"Result: "<<amount<<endl;
 }

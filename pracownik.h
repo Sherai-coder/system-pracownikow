@@ -14,9 +14,10 @@ protected:
     double earningsPerHour();
 public:
     Pracownik(int id,const std::string& name,TypPracownika typ, double s, int h);
+    virtual ~Pracownik()=default;
     virtual void wykonajPrace() const = 0;
     int getId() const;
-    void setId(int i);
+
     std::string getName() const;
     TypPracownika getType() const;
     void setType(TypPracownika typ);

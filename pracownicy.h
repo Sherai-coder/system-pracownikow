@@ -15,7 +15,7 @@ struct invalidWorkerRecord
     std::string data;
     std::string reason;
 
-    void setDate(const std::string& information)
+    void setData(const std::string& information)
     {
         data = information;
     }
@@ -25,57 +25,20 @@ struct invalidWorkerRecord
     }
 };
 
-enum class ParseStatus
-{
-    Success,
-    InvalidArgument,
-    OutOfRange,
-    InvalidFormat
-};
 
-struct ParseResultInt
-{
-    ParseStatus status;
-    int value;
-};
-struct ParseResultDouble
-{
-    ParseStatus status;
-    double value;
-};
-
-struct ParseWorkerResult
-{
-    ParseStatus status;
-    int id;
-    std::string name;
-    TypPracownika type;
-    double salary;
-    int hours;
-};
 
 class Pracownicy
 {
     std::vector<std::unique_ptr<Pracownik>> pracownicy;
     std::vector<invalidWorkerRecord> invalidRecords;
     int nextId=1;
+    int highestUsedId=0;
+    int highestUsedIdFromFile=0;
 
-    ParseResultInt tryParseId(const std::string& idStr);
-    bool isValidId(int id) const;
-    bool isValidName(const std::string& name) const;
-    ParseStatus isValidTypPracownika(TypPracownika type) const;
 
-    ParseResultDouble tryParseSalary(const std::string& salaryStr);
-    bool isValidSalary(double salar) const;
-
-    ParseResultInt tryParseHours(const std::string& hoursStr);
-    bool isValidHours(int hours) const;
-
-    ParseWorkerResult parseWorkerRecord(const std::string& line);
 
 public:
-    int getNextId() const;
-    bool setNextId(int id);
+    int saveHighestUsedId();
     std::unique_ptr<Pracownik> createWorker(int id,const std::string& name, TypPracownika p, double s, int h);
 
 
@@ -83,7 +46,6 @@ public:
     void showAllWorkersDetails() const;
     void addWorker(const std::string& name, TypPracownika p, double s, int h);
 
-    bool isVectorEmpty();
     template <typename Findworker>
     Pracownik* findWorkerBy(Findworker findworker);
     Pracownik* findWorkerByName(const std::string& name);
@@ -143,8 +105,6 @@ public:
     template <typename Condition, typename Modification>
     bool changeWorkers(Condition condition, Modification modification);
     bool changeSpecificWorkersSalary(TypPracownika p, double salary);
-
-    bool changeWorkerId(Pracownik* worker,int id);
 
     double calculateAverageSalary() const;
     double accumulateWholeSalary() const;
@@ -229,52 +189,34 @@ std::vector<const Pracownik*> Pracownicy::getWorkers(Predicate predicate) const
 template <typename Modification>
 void Pracownicy::changeAllWorkers(Modification modification)
 {
-    if(pracownicy.empty())
-    {
-        return;
-    }
-    for (const auto& worker : pracownicy)
-    {
-        modification(worker);
-    }
+    for_each(pracownicy.begin(), pracownicy.end(), modification);
 }
 
 template <typename Condition, typename Modification>
 bool Pracownicy::changeWorkers(Condition condition, Modification modification)
 {
     bool done=false;
-    if(pracownicy.empty())
-    {
-        return done;
-    }
     for (const auto& worker : pracownicy)
     {
         if(condition(worker))
         {
-            modification(worker);
+            (modification(worker));
             done=true;
         }
     }
     return done;
 }
 
+
 template <typename Howtocount>
 int Pracownicy::countWorkers(Howtocount howtocount) const
 {
-    int result=0;
     if(pracownicy.empty())
     {
-        return result;
+        return 0;
     }
-    for (const auto& worker : pracownicy)
-    {
-        if(howtocount(worker))
-        {
-            result++;
-        }
-    }
-    return result;
+    return count_if(pracownicy.begin(), pracownicy.end(), howtocount);
 }
 
-std::string statusNaString(ParseStatus status);
+
 

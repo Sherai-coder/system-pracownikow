@@ -37,9 +37,9 @@ string getWord(const string& message)
         cout<<message<<endl;
         cin>>word;
         bool isValid=true;
-        for (int i=0; i<word.size(); ++i)
+        for (char c : word)
         {
-            if(!isalpha(word[i]))
+            if(!isalpha(c))
             {
                 isValid=false;
                 break;

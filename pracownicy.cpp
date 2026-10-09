@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <utility>
+#include "parser.h"
 
 std::unique_ptr<Pracownik> Pracownicy::createWorker(int id,const std::string& name, TypPracownika p, double s, int h)
 {
@@ -27,28 +28,13 @@ std::unique_ptr<Pracownik> Pracownicy::createWorker(int id,const std::string& na
     }
 }
 
+
 void Pracownicy::addWorker(const std::string& name, TypPracownika p, double s, int h)
 {
     pracownicy.push_back(createWorker(nextId,name,p,s,h));
     nextId++;
 }
 
-bool Pracownicy::setNextId(int id)
-{
-    for(const auto& worker : pracownicy)
-    {
-        if(worker->getId()==id)
-        {
-            return false;
-        }
-    }
-    nextId=id;
-    return true;
-}
-int Pracownicy::getNextId() const
-{
-    return nextId;
-}
 
 void Pracownicy::showAllWorkersWork() const
 {
@@ -173,7 +159,7 @@ const Pracownik* Pracownicy::findBestPaidWorker() const
 {
     return findBest([] (const auto& a, const auto&b)
     {
-        return a->getSalary()>b->getSalary();
+        return a->getSalary()<b->getSalary();
     });
 }
 
@@ -181,7 +167,7 @@ const Pracownik* Pracownicy::findWorkerWithLongestHours() const
 {
     return findBest([] (const auto& a, const auto& b)
     {
-        return a->getHours()>b->getHours();
+        return a->getHours()<b->getHours();
     });
 }
 
@@ -241,16 +227,16 @@ Pracownik* Pracownicy::findWorkerByType(TypPracownika p)
 const Pracownik* Pracownicy::findBestPaidWorkerByType(TypPracownika typ) const
 {
     double maksSalary=0;
-    const Pracownik* szukany=nullptr;
-    for(const auto& i : pracownicy)
+    const Pracownik* wanted=nullptr;
+    for(const auto& worker : pracownicy)
     {
-        if(i->getType()==typ && maksSalary<i->getSalary())
+        if(worker->getType()==typ && maksSalary<worker->getSalary())
         {
-            szukany = i.get();
-            maksSalary = i->getSalary();
+            wanted = worker.get();
+            maksSalary = worker->getSalary();
         }
     }
-    return szukany;
+    return wanted;
 }
 
 ///////////////// changewORKER DETAILS/ //////////////////
@@ -271,31 +257,12 @@ bool Pracownicy::changeWorkerHours(Pracownik* worker, int hours)
 }
 bool Pracownicy::changeWorkerSalary(Pracownik* worker,double salary)
 {
-    if(worker!=nullptr)
+    return changeDetail(worker,[&salary](Pracownik* worker)
     {
         worker->setSalary(salary);
-        return true;
-    }
-    return false;
+    });
 }
 
-bool Pracownicy::changeWorkerId(Pracownik* worker,int id)
-{
-    if(worker==nullptr)
-    {
-        return false;
-    }
-    auto it  = find_if(pracownicy.begin(), pracownicy.end(),[&id,&worker] (const auto& a)
-    {
-        return a->getId()==id;
-    });
-    if(it!=pracownicy.end())
-    {
-        return false;
-    }
-    worker->setId(id);
-    return true;
-}
 bool Pracownicy::changeWorkerTypeCheck(Pracownik* worker,TypPracownika typ)
 {
     return changeDetail(worker,[&typ](Pracownik* worker)
@@ -378,7 +345,7 @@ void Pracownicy::changeAllWorkersHours(int hours)
 
 bool Pracownicy::changeSpecificWorkersSalary(TypPracownika type,double salary)
 {
-    changeWorkers(([&type] (const auto& worker)
+    return changeWorkers(([&type] (const auto& worker)
     {
         return worker->getType()==type;
     }),
@@ -395,15 +362,11 @@ double Pracownicy::getHighestEarningsPerHour() const
     {
         return 0.0;
     }
-    double najwieksza = 0.0;
-    for (const auto& worker : pracownicy)
+    auto it = max_element(pracownicy.begin(), pracownicy.end(), [] (const auto& a, const auto& b)
     {
-        if(worker->getEarningsPerHour()>najwieksza)
-        {
-            najwieksza=worker->getEarningsPerHour();
-        }
-    }
-    return najwieksza;
+        return a->getEarningsPerHour()<b->getEarningsPerHour();
+    });
+    return (*it)->getEarningsPerHour();
 }
 double Pracownicy::calculateAverageSalary() const
 {
@@ -411,8 +374,7 @@ double Pracownicy::calculateAverageSalary() const
     {
         return 0.0;
     }
-    double wholeAmount= accumulateWholeSalary();
-    return wholeAmount/pracownicy.size();
+    return accumulateWholeSalary()/pracownicy.size();
 }
 double Pracownicy::accumulateWholeSalary() const
 {
@@ -420,11 +382,10 @@ double Pracownicy::accumulateWholeSalary() const
     {
         return 0.0;
     }
-    double amount=accumulate(pracownicy.begin(), pracownicy.end(), 0.0, [] (double amount, const auto& worker)
+    return accumulate(pracownicy.begin(), pracownicy.end(), 0.0, [] (double amount, const auto& worker)
     {
         return amount+worker->getSalary();
     });
-    return amount;
 }
 
 
@@ -435,9 +396,11 @@ bool Pracownicy::saveToFile()
 {
     std::ofstream plik;
     plik.open("dane.txt");
-    bool done = false;
-    plik<<nextId<<std::endl;
-    done = true;
+    if(!plik)
+    {
+        return false;
+    }
+    plik<<saveHighestUsedId()<<std::endl;
     for (const auto& worker : pracownicy)
     {
         plik<<worker->getId()<<"|"<<
@@ -446,182 +409,7 @@ bool Pracownicy::saveToFile()
             worker->getSalary()<<"|"<<
             worker->getHours()<<"|"<<std::endl;
     }
-    for (const auto& invalidDate : invalidRecords)
-    {
-        plik<<invalidDate.data<<std::endl;
-    }
-    return done;
-}
-
-bool Pracownicy::isValidName(const std::string& name) const
-{
-    return !name.empty();
-}
-
-ParseResultInt Pracownicy::tryParseId(const std::string& idStr)
-{
-    std::size_t pos = 0;
-    try
-    {
-        int id = stoi(idStr,&pos);
-        if(pos!=idStr.length())
-        {
-            return {ParseStatus::InvalidFormat,0};
-        }
-        if(isValidId(id))
-        {
-            return {ParseStatus::Success,id};
-        }
-        else return {ParseStatus::InvalidArgument,0};
-    }
-    catch(const std::invalid_argument&)
-    {
-        return {ParseStatus::InvalidArgument,0};
-    }
-    catch(const std::out_of_range&)
-    {
-        return {ParseStatus::OutOfRange,0};
-    }
-}
-bool Pracownicy::isValidId(int id) const
-{
-    if(id<0 || id>10000)
-    {
-        return false;
-    }
-    return true;
-}
-ParseStatus Pracownicy::isValidTypPracownika(TypPracownika type) const
-{
-    if(type==TypPracownika::Nieznany)
-    {
-        return ParseStatus::InvalidFormat;
-    }
-    return ParseStatus::Success;
-}
-
-ParseResultDouble Pracownicy::tryParseSalary(const std::string& salaryStr)
-{
-    std::size_t pos = 0;
-    try
-    {
-        double salary=stod(salaryStr,&pos);
-        if(pos!=salaryStr.length())
-        {
-            return {ParseStatus::InvalidFormat,0.0};
-        }
-        return {ParseStatus::Success,salary};
-    }
-    catch(const std::invalid_argument&)
-    {
-        return {ParseStatus::InvalidArgument,0.0};
-    }
-    catch(const std::out_of_range&)
-    {
-        return {ParseStatus::OutOfRange,0.0};
-    }
-}
-
-bool Pracownicy::isVectorEmpty()
-{
-    if(invalidRecords.empty())
-    {
-        std::cout<<"Pusty."<<std::endl;
-        return true;
-    }
-    else
-    {
-        std::cout<<"Sa dane."<<std::endl;
-        return false;
-    }
-}
-
-bool Pracownicy::isValidSalary(double salary) const
-{
-    if(salary<1000 || salary>100000)
-    {
-        return false;
-    }
-    return true;
-}
-
-ParseWorkerResult Pracownicy::parseWorkerRecord(const std::string& line)
-{
-    ParseWorkerResult result;
-    std::stringstream ss(line);
-    std::string idStr,name,typPracownikaStr,hoursStr,salaryStr;
-    ParseStatus status = ParseStatus::Success;
-    getline(ss,idStr,'|');
-    getline(ss,name,'|');
-    getline(ss,typPracownikaStr,'|');
-    getline(ss,salaryStr,'|');
-    getline(ss,hoursStr,'|');
-    ParseResultInt idResult = tryParseId(idStr);
-    if(idResult.status!=ParseStatus::Success)
-    {
-        status= idResult.status;
-    }
-    bool isNameCorrect = isValidName(name);
-    if(!isNameCorrect)
-    {
-        if(status==ParseStatus::Success)
-        {
-            status=ParseStatus::InvalidFormat;
-        }
-    }
-    TypPracownika type = stringNaTyp(typPracownikaStr);
-    if(type==TypPracownika::Nieznany && status==ParseStatus::Success)
-    {
-        status = ParseStatus::InvalidArgument;
-    }
-    ParseResultDouble salaryResult=tryParseSalary(salaryStr);
-    if(salaryResult.status!=ParseStatus::Success && status==ParseStatus::Success)
-    {
-        status = salaryResult.status;
-    }
-    ParseResultInt hoursResult=tryParseHours(hoursStr);
-    if(hoursResult.status!=ParseStatus::Success && status==ParseStatus::Success)
-    {
-        status = hoursResult.status;
-    }
-    result.status = status;
-    result.id = idResult.value;
-    result.name = name;
-    result.type= type;
-    result.salary = salaryResult.value;
-    result.hours = hoursResult.value;
-    return result;
-}
-
-
-ParseResultInt Pracownicy::tryParseHours(const std::string& hoursStr)
-{
-    std::size_t pos = 0;
-    try
-    {
-        int hours = stoi(hoursStr,&pos);
-        if(pos!=hoursStr.length())
-        {
-            return {ParseStatus::InvalidFormat,0};
-        }
-        if(!isValidHours(hours))
-        {
-            return {ParseStatus::InvalidArgument,0};
-        }
-        else return {ParseStatus::Success,hours};
-    }
-    catch(std::invalid_argument&)
-    {
-        return {ParseStatus::InvalidArgument,0};
-    }
-    catch(std::out_of_range&)
-    {
-        return {ParseStatus::OutOfRange,0};
-    }
-}
-bool Pracownicy::isValidHours(int hours) const
-{
-    if(hours<1 || hours>200)
+    if(plik.bad())
     {
         return false;
     }
@@ -629,53 +417,77 @@ bool Pracownicy::isValidHours(int hours) const
 }
 
 
+
+int Pracownicy::saveHighestUsedId()
+{
+    if(pracownicy.empty())
+    {
+        return highestUsedIdFromFile;
+    }
+    auto it = max_element(pracownicy.begin(), pracownicy.end(), [] (const auto& a, const auto& b)
+    {
+        return a->getId()<b->getId();
+    });
+    if(highestUsedIdFromFile < (*it)->getId())
+    {
+        return (*it)->getId();
+    }
+    else return highestUsedIdFromFile;
+
+}
 
 bool Pracownicy::loadFromFile()
 {
     std::ifstream plik;
+    pracownicy.clear();
+    invalidRecords.clear();
     plik.open("dane.txt");
-    bool done = false;
+    if(!plik)
+    {
+        return false;
+    }
     std::string line;
-    std::string nextIdStr;
-    getline(plik,nextIdStr);
-    setNextId(stoi(nextIdStr));
+    std::string highestUsedIdStr;
+    getline(plik,highestUsedIdStr);
+    ParseResultInt outcome = tryParseId(highestUsedIdStr);
+    if(outcome.status == ParseStatus::Success)
+    {
+        highestUsedIdFromFile = outcome.value;
+        nextId = outcome.value + 1;
+    }
     while(getline(plik,line))
     {
         invalidWorkerRecord record;
         ParseWorkerResult result = parseWorkerRecord(line);
-        std::cout<<statusNaString(result.status)<<std::endl;
         if(result.status!=ParseStatus::Success)
         {
-            record.setDate(line);
+            record.setData(line);
             record.setReason(statusNaString(result.status));
             invalidRecords.push_back(record);
         }
         else
         {
-            auto worker = createWorker(result.id,result.name,result.type,result.salary,result.hours);
-            pracownicy.push_back(std::move(worker));
-            done=true;
+            auto it = find_if(pracownicy.begin(), pracownicy.end(), [&result] (const auto& a)
+            {
+                return result.id==a->getId();
+            });
+            if(it!=pracownicy.end())
+            {
+                record.setData(line);
+                record.setReason("Duplicate ID");
+                invalidRecords.push_back(record);
+            }
+            else
+            {
+                auto worker = createWorker(result.id,result.name,result.type,result.salary,result.hours);
+                pracownicy.push_back(std::move(worker));
+            }
+
         }
     }
-    return done;
-}
-std::string statusNaString(ParseStatus status)
-{
-    if(status==ParseStatus::Success)
+    if(plik.bad())
     {
-        return "Success";
+        return false;
     }
-    if(status==ParseStatus::InvalidArgument)
-    {
-        return "Invalid Argument";
-    }
-    if(status==ParseStatus::InvalidFormat)
-    {
-        return "Invalid Format";
-    }
-    if(status==ParseStatus::OutOfRange)
-    {
-        return "Out of range";
-    }
-    return "Unknown";
+    return true;
 }

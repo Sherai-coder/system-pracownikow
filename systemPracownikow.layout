@@ -2,71 +2,84 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="input.cpp" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1571" topLine="48" />
-		</Cursor>
-	</File>
-	<File name="pracownicy.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="7163" topLine="8" />
-		</Cursor>
-	</File>
-	<File name="typPracownika.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="437" topLine="3" />
-		</Cursor>
-	</File>
-	<File name="pracownik.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="571" topLine="14" />
-		</Cursor>
-	</File>
-	<File name="menu.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1735" topLine="66" />
-		</Cursor>
-	</File>
 	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="213" topLine="0" />
+			<Cursor1 position="157" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="menu.cpp" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="input.cpp" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="13648" topLine="517" />
+			<Cursor1 position="882" topLine="19" />
 		</Cursor>
 	</File>
-	<File name="pracownik.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="parser.h" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="773" topLine="0" />
+			<Cursor1 position="166" topLine="7" />
 		</Cursor>
 	</File>
-	<File name="typPracownika.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="typPracownika.cpp" open="1" top="1" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="229" topLine="0" />
+			<Cursor1 position="344" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="pracownicy.h" open="1" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6065" topLine="184" />
+		</Cursor>
+	</File>
+	<File name="menu.cpp" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1350" topLine="51" />
+		</Cursor>
+	</File>
+	<File name="typPracownika.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="12" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="pracownicy.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="11848" topLine="498" />
+			<Cursor1 position="9743" topLine="455" />
 		</Cursor>
 	</File>
-	<File name="input.h" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="pracownik.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="413" topLine="15" />
+		</Cursor>
+	</File>
+	<File name="parser.cpp" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2746" topLine="117" />
+		</Cursor>
+	</File>
+	<File name="pracownik.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="568" topLine="7" />
+		</Cursor>
+	</File>
+	<File name="menu.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1695" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="input.h" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="333" topLine="0" />
 		</Cursor>
 	</File>
-	<Target name="Debug" top="pracownicy.cpp">
+	<Target name="Debug" top="typPracownika.cpp">
 		<File name="main.cpp" />
 		<File name="pracownik.h" />
 		<File name="pracownik.cpp" />
-		<File name="pracownicy.h" />
+		<File name="pracownicy.cpp" />
 		<File name="typPracownika.h" />
 		<File name="typPracownika.cpp" />
 		<File name="menu.h" />
 		<File name="menu.cpp" />
 		<File name="input.h" />
 		<File name="input.cpp" />
+		<File name="parser.h" />
+		<File name="parser.cpp" />
+		<File name="pracownicy.h" />
 	</Target>
 </CodeBlocks_layout_file>
